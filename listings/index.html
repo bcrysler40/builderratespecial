@@ -342,14 +342,13 @@ function openQR(slug){
   openModal('qrModal');
 }
 
-// copy each lead into HubSpot (same form as southernhl.com); email above stays the primary path
+// copy each lead into HubSpot (same form as southernhl.com)
 function sendToHubSpot(p,f){
-  try{
     const ck=(document.cookie.match(/hubspotutk=([^;]+)/)||[])[1];
-    fetch('https://api.hsforms.com/submissions/v3/integration/submit/242109586/f7c9da26-9530-4f31-92b1-4db11e576281',{method:'POST',headers:{'Content-Type':'application/json'},
+    return fetch('https://api.hsforms.com/submissions/v3/integration/submit/242109586/f7c9da26-9530-4f31-92b1-4db11e576281',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({fields:[{name:'firstname',value:f.first_name.value.trim()},{name:'lastname',value:f.last_name.value.trim()},{name:'email',value:f.email.value.trim()},{name:'phone',value:f.phone.value.trim()}],
-        context:Object.assign({pageUri:location.href,pageName:'Builder Rate Special map – '+(p.Property||'General inquiry')},ck?{hutk:ck}:{})})}).catch(()=>{});
-  }catch(_){}
+        context:Object.assign({pageUri:location.href,pageName:'Builder Rate Special map – '+(p.Property||'General inquiry')},ck?{hutk:ck}:{})})})
+      .then(r=>{if(!r.ok)throw new Error('HubSpot '+r.status);});
 }
 
 // submit → email via FormSubmit
@@ -379,10 +378,14 @@ function bindForm(){$('leadForm').addEventListener('submit',async e=>{
   if(payload.Email)payload._replyto=payload.Email;
   const b=$('sendBtn');b.disabled=true;b.setAttribute('aria-busy','true');b.textContent='Sending…';
   try{
-    const r=await fetch('https://formsubmit.co/ajax/'+CFG.leadEmail,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
-    const j=await r.json().catch(()=>({}));
-    if(!r.ok||String(j.success)!=='true')throw new Error(j.message||'send failed');
-    sendToHubSpot(payload,f);
+    // send to email and HubSpot at the same time; the lead counts if either one accepts it
+    const [em,hs]=await Promise.allSettled([
+      fetch('https://formsubmit.co/ajax/'+CFG.leadEmail,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+        .then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok||String(j.success)!=='true')throw new Error(j.message||'email failed');}),
+      sendToHubSpot(payload,f)]);
+    if(em.status==='rejected')console.warn('Lead email:',em.reason&&em.reason.message);
+    if(hs.status==='rejected')console.warn('Lead HubSpot:',hs.reason&&hs.reason.message);
+    if(em.status==='rejected'&&hs.status==='rejected')throw new Error('send failed');
     try{if(window.gtag)gtag('event','generate_lead',{form:'builder_rate_map'});if(window.fbq)fbq('track','Lead');}catch(_){}
     $('leadBody').innerHTML=`<div class="ok" role="status"><div style="font-size:40px" aria-hidden="true">✅</div><h3 tabindex="-1" id="okH">Thanks, ${payload.Name.split(' ')[0]}!</h3><p>We received your info${h?' about <b>'+label(h)+'</b>':''}. Someone from our team will reach out shortly.</p><p style="color:#5d6b7a;font-size:14px">Questions now? Call <a href="tel:${CFG.phone.replace(/\D/g,'')}">${CFG.phone}</a></p><button type="button" class="btn btn-navy" onclick="closeModal('leadModal')">Back to the map</button></div>`;
     $('okH').focus();
