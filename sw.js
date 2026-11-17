@@ -1,6 +1,6 @@
 /* Builder Rate Special – offline support. Bump VERSION when the page changes. */
-const VERSION = 'brs-v7';
-const SHELL = ['/', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/apple-touch-icon.png'];
+const VERSION = 'brs-v8';
+const SHELL = ['/', '/manifest.webmanifest', '/icons/icon-192.png?v=2', '/icons/icon-512.png?v=2', '/icons/apple-touch-icon.png?v=2'];
 const LIBS = /^https:\/\/(unpkg\.com|cdnjs\.cloudflare\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;
 const TILES = /^https:\/\/server\.arcgisonline\.com\//;
 
