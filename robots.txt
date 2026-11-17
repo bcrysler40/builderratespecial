@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://builderratespecial.com/sitemap.xml
