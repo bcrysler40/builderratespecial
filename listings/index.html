@@ -235,7 +235,7 @@ button.card{width:100%;text-align:left;background:#fff;border:0;border-bottom:1p
 
 <div class="install" id="install" role="dialog" aria-label="Install app">
   <img src="/icons/icon-192.png" alt="">
-  <div class="tx" id="installTx"><b>Get the 4.99% Homes app</b>Add it to your home screen for one-tap access.</div>
+  <div class="tx" id="installTx"><b>Get the app</b>Add it to your home screen for one-tap access.</div>
   <button type="button" class="go2" id="installBtn">Install</button>
   <button type="button" class="no" id="installNo" aria-label="Dismiss install message">×</button>
 </div>
@@ -431,7 +431,7 @@ if(deep&&HOMES.some(h=>h.slug===deep)){focusHome(deep);openLead(deep)}
   addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;show()});
   var ua=navigator.userAgent,isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   if(isIOS){
-    tx.innerHTML='<b>Get the 4.99% Homes app</b>Tap the <svg class="ios-share" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="#0c173d" stroke-width="2"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8"/></svg> Share, then <b style="display:inline;font-size:13.5px">Add to Home Screen</b>.';
+    tx.innerHTML='<b>Get the app</b>Tap the <svg class="ios-share" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="#0c173d" stroke-width="2"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8"/></svg> Share, then <b style="display:inline;font-size:13.5px">Add to Home Screen</b>.';
     btn.style.display='none';show();
   }
   btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;box.classList.remove('show')})});
