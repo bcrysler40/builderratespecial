@@ -78,6 +78,22 @@ aside{width:390px;min-width:320px;background:#fff;border-right:1px solid var(--l
 .pop .meta{font-size:13px;color:var(--mute)}
 .pop .est{margin:10px 0;padding:8px 10px;background:#f6f8fa;border-radius:8px;font-size:13px}
 .pop .row{display:flex;gap:8px;margin-top:10px}
+.pop .ph{display:block;position:relative;width:100%;margin:0 0 10px;padding:0;border:0;border-radius:8px;overflow:hidden;cursor:zoom-in;background:#e9eef3;aspect-ratio:3/2}
+.pop .ph img{display:block;width:100%;height:100%;object-fit:cover}
+.pop .ph .n{position:absolute;right:8px;bottom:8px;background:rgba(12,23,61,.85);color:#fff;font:600 12px Inter,sans-serif;padding:4px 8px;border-radius:6px}
+.pop .ph .t{position:absolute;left:8px;top:8px;background:rgba(255,255,255,.92);color:#0c173d;font:600 11px Inter,sans-serif;padding:3px 7px;border-radius:6px}
+.gal{max-width:900px}
+.gal .sheet-b{padding:12px}
+.gal .stage{position:relative;background:#0b1220;border-radius:10px;overflow:hidden;aspect-ratio:3/2}
+.gal .stage img{width:100%;height:100%;object-fit:contain;display:block}
+.gal .nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#0c173d;font-size:24px;line-height:1;cursor:pointer}
+.gal .prev{left:10px}.gal .next{right:10px}
+.gal .cnt{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12.5px;padding:4px 9px;border-radius:6px}
+.gal .thumbs{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:4px}
+.gal .thumbs button{flex:none;border:2px solid transparent;border-radius:6px;padding:0;background:none;cursor:pointer;opacity:.7}
+.gal .thumbs button[aria-current="true"]{border-color:var(--gold2);opacity:1}
+.gal .thumbs img{display:block;width:84px;height:56px;object-fit:cover;border-radius:4px}
+.gal .note{font-size:12px;color:var(--mute);margin:10px 2px 0;line-height:1.45}
 .pop .row .btn{flex:1;padding:9px 10px;font-size:13px}
 .approx{font-size:11.5px;color:var(--amber);margin-top:4px}
 .mk{width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
@@ -242,6 +258,18 @@ button.card{width:100%;text-align:left;background:#fff;border:0;border-bottom:1p
   </div>
 </div>
 
+<div class="modal" id="galModal" onclick="if(event.target===this)closeModal('galModal')">
+  <div class="sheet gal" role="dialog" aria-modal="true" aria-labelledby="galTitle">
+    <div class="sheet-h"><button type="button" class="x" onclick="closeModal('galModal')" aria-label="Close photos">×</button>
+      <div class="k" id="galKicker"></div><h2 id="galTitle"></h2><div class="s" id="galSub"></div></div>
+    <div class="sheet-b">
+      <div class="stage"><img id="galImg" alt=""><button type="button" class="nav prev" onclick="galStep(-1)" aria-label="Previous photo">‹</button><button type="button" class="nav next" onclick="galStep(1)" aria-label="Next photo">›</button><div class="cnt" id="galCnt" aria-live="polite"></div></div>
+      <div class="thumbs" id="galThumbs"></div>
+      <p class="note">Representative photos of the WorldCorp Realty model floor plan. Finishes, colors, elevation and options on the actual home may differ. <a href="#" id="galLead">Ask about this home</a></p>
+    </div>
+  </div>
+</div>
+
 <div class="install" id="install" role="dialog" aria-label="Install app">
   <img src="/icons/icon-192.png?v=2" alt="">
   <div class="tx" id="installTx"><b>Get the app</b>Add it to your home screen for one-tap access.</div>
@@ -269,6 +297,46 @@ const homeUrl=(h,src)=>CFG.pageUrl+'?home='+h.slug+(src?'&src='+src:'');
 // Payments at the Builder Rate Special, P&I only.
 // FHA: 30-yr fixed, 3.5% down, 1.75% upfront MIP financed. VA: 30-yr fixed, $0 down, 2.15% funding fee financed (first use).
 const EST_RATE=4.99, EST_APR=5.838, VA_APR=5.934;
+
+// Representative photos of WorldCorp Realty's model floor plans (hosted on worldcorprealtyllc.com).
+const WCR_UP='https://worldcorprealtyllc.com/wp-content/uploads/';
+const MODELS={
+  Classic:{sqft:1331,url:'https://worldcorprealtyllc.com/classic-model',photos:['2014/03/Classic-Model-Small','2017/02/DSC_1582-Edit-Small','2017/02/DSC_1583-Edit-Small','2017/02/DSC_1586-Edit-Small','2017/02/DSC_1587-Edit-Small','2017/02/DSC_1589-Edit-Small','2017/02/DSC_1590-Edit-Small','2017/02/DSC_1591-Edit-Small','2017/02/DSC_1593-Edit-Small','2017/02/DSC_1594-Edit-Small','2017/02/DSC_1596-Edit-Small','2017/02/DSC_1598-Edit-Small']},
+  Floridian:{sqft:1077,url:'https://worldcorprealtyllc.com/floridian-model',photos:['2014/03/DSC_1529-HDR-Edit-Small','2017/02/DSC_1539-Edit-Small','2017/02/DSC_1540-Edit-Small','2017/02/DSC_1541-Edit-Small','2017/02/DSC_1542-Edit-Small','2017/02/DSC_1543-Edit-Small','2017/02/DSC_1544-Edit-Small','2017/02/DSC_1545-Edit-Small','2017/02/DSC_1547-Edit-Small']},
+  Imperial:{sqft:1936,url:'https://worldcorprealtyllc.com/imperial-model',photos:['2014/03/Imperial-Model-Small','2017/02/Living-area-picture','2017/02/Large-living-area2','2017/02/Living-area-Small','2017/02/Kitchen-1','2017/02/Kitchen-2','2017/02/Kitchen-3','2017/02/Kitchen-4','2017/02/Dining-Area','2017/02/Bedroom','2017/02/Bathroom-1','2017/02/Bathroom-2','2017/02/Bathroom-3']},
+  Premier:{sqft:1747,url:'https://worldcorprealtyllc.com/premier-model',photos:['2017/02/Premier-Model-Small','2017/02/Premier-Inside-LA-1-Small','2017/02/Premier-Inside-Kit-DA-LR-Small','2017/02/Premier-Inside-Kit-DA-Small','2017/02/Premier-Kitchen-Small','2017/02/Premier-Kit-1-Small','2017/02/Premier-4-Bedroom-Small','2017/02/Premier-3-Bedroom-Small','2017/02/Premier-Bathroom-Small','2017/02/Premier-2nd-Bathroom-1-Small']}
+};
+// Which model each home is. Default rule: 4 bd = Premier; 3 bd up to $209,900 = Floridian,
+// up to $289,900 = Classic, $290,000+ = Imperial. Put exact answers here by slug to override, e.g. '5984-nw-65th-st-34482':'Classic'.
+// Use null to show no photos for a home.
+const MODEL_OVERRIDE={};
+function modelOf(h){
+  if(h.slug in MODEL_OVERRIDE)return MODEL_OVERRIDE[h.slug];
+  if(isLand(h))return null;
+  if(h.beds===4)return 'Premier';
+  if(h.beds===3)return h.price<=209900?'Floridian':h.price<=289900?'Classic':'Imperial';
+  return null;
+}
+const photoUrl=(p,thumb)=>WCR_UP+p+(thumb?'-300x200':'')+'.jpg';
+let GAL={h:null,i:0};
+function openGallery(slug,i){
+  const h=HOMES.find(x=>x.slug===slug),m=MODELS[modelOf(h)];if(!m)return;
+  GAL={h,i:i||0};
+  $('galKicker').textContent=modelOf(h)+' model · '+m.sqft.toLocaleString('en-US')+' sq ft living';
+  $('galTitle').textContent=label(h);
+  $('galSub').textContent=cityLine(h)+' · '+money(h.price);
+  $('galThumbs').innerHTML=m.photos.map((p,k)=>`<button type="button" onclick="galGo(${k})" aria-label="Photo ${k+1} of ${m.photos.length}"><img src="${photoUrl(p,true)}" alt="" loading="lazy"></button>`).join('');
+  $('galLead').onclick=e=>{e.preventDefault();closeModal('galModal');openLead(slug)};
+  galGo(GAL.i);
+  openModal('galModal',document.querySelector('#galModal .next'));
+}
+function galGo(k){
+  const m=MODELS[modelOf(GAL.h)],n=m.photos.length;GAL.i=(k+n)%n;
+  const img=$('galImg');img.src=photoUrl(m.photos[GAL.i]);img.alt=`${modelOf(GAL.h)} model, representative photo ${GAL.i+1} of ${n}`;
+  $('galCnt').textContent=(GAL.i+1)+' / '+n;
+  [...$('galThumbs').children].forEach((b,j)=>{b.setAttribute('aria-current',j===GAL.i?'true':'false');if(j===GAL.i)b.scrollIntoView({block:'nearest',inline:'nearest'})});
+}
+function galStep(d){galGo(GAL.i+d)}
 function pmt(L){const r=EST_RATE/1200,n=360;return L*r/(1-Math.pow(1+r,-n));}
 function pi(price){return pmt(price*0.965*1.0175);}
 function piVA(price){return pmt(price*1.0215);}
@@ -286,7 +354,9 @@ map.getContainer().setAttribute('aria-label','Map of homes for sale. Use the lis
 function cls(h){return h.status==='Pending'?'pend':(isLand(h)?'land':'sale')}
 function popupHtml(h){
   const est=!isLand(h)&&h.status!=='Pending'?`<div class="est">Est. principal &amp; interest*<br><b>FHA ${money(pi(h.price))}/mo</b> <span style="color:#5d6b7a;font-size:11.5px">· ${EST_RATE}% rate (${EST_APR}% APR), 3.5% down (${money(h.price*0.035)}), 1.75% upfront MIP financed</span><br><b>VA ${money(piVA(h.price))}/mo</b> <span style="color:#5d6b7a;font-size:11.5px">· ${EST_RATE}% rate (${VA_APR}% APR), $0 down, 2.15% funding fee financed</span><br><span style="color:#5d6b7a;font-size:11.5px">30-yr fixed. Taxes, insurance &amp; FHA monthly MI not included; actual payment will be higher.</span></div>`:'';
-  return `<div class="pop"><div class="price">${money(h.price)} <span class="badge ${h.status==='Pending'?'b-pend':'b-sale'}">${h.status}</span>${isLand(h)?'<span class="badge b-no">Not eligible for 4.99%</span>':'<span class="badge b-ok">4.99% eligible*</span>'}</div>
+  const mdl=modelOf(h),M=MODELS[mdl];
+  const ph=M?`<button type="button" class="ph" onclick="openGallery('${h.slug}')" aria-label="View ${M.photos.length} photos of the ${mdl} model for ${label(h)}"><img src="${photoUrl(M.photos[0])}" alt="" loading="lazy"><span class="t">${mdl} model · representative</span><span class="n">📷 ${M.photos.length} photos</span></button>`:'';
+  return `<div class="pop">${ph}<div class="price">${money(h.price)} <span class="badge ${h.status==='Pending'?'b-pend':'b-sale'}">${h.status}</span>${isLand(h)?'<span class="badge b-no">Not eligible for 4.99%</span>':'<span class="badge b-ok">4.99% eligible*</span>'}</div>
   <div class="addr">${label(h)}</div><div class="meta">${cityLine(h)}${h.beds?` · ${h.beds} bd · ${h.baths} ba`:''}</div>
   ${h.approx?'<div class="approx">Map pin is approximate</div>':''}${est}
   <div class="row"><button type="button" class="btn btn-gold" onclick="openLead('${h.slug}')">I'm interested<span class="sr-only"> in ${label(h)}</span></button><button type="button" class="btn btn-line" onclick="openQR('${h.slug}')">QR code<span class="sr-only"> for ${label(h)}</span></button></div>
@@ -296,7 +366,7 @@ const markers={};
 HOMES.forEach(h=>{
   const icon=L.divIcon({className:'',html:`<div class="mk ${cls(h)}"></div>`,iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-26]});
   const m=L.marker([h.lat,h.lng],{icon,title:label(h)+', '+money(h.price)+', '+h.status,alt:label(h)+', '+money(h.price)+', '+h.status,keyboard:true});
-  m.bindPopup(()=>popupHtml(h));
+  m.bindPopup(()=>popupHtml(h),{maxWidth:320,minWidth:260});
   m.on('click',()=>highlight(h.slug));
   markers[h.slug]=m;
 });
@@ -331,6 +401,7 @@ function openModal(id,focusEl){LAST_FOCUS=document.activeElement;$(id).classList
 function closeModal(id){$(id).classList.remove('open');if(!document.querySelector('.modal.open')){document.querySelectorAll('body > [aria-hidden="true"]').forEach(e=>{if(!e.classList.contains('hp'))e.removeAttribute('aria-hidden')})}if(LAST_FOCUS&&document.contains(LAST_FOCUS))LAST_FOCUS.focus();else $('main').focus&&$('q').focus()}
 document.addEventListener('keydown',e=>{const m=document.querySelector('.modal.open');if(!m)return;
   if(e.key==='Escape'){e.preventDefault();closeModal(m.id);return}
+  if(m.id==='galModal'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();galStep(e.key==='ArrowLeft'?-1:1);return}
   if(e.key==='Tab'){const f=[...m.querySelectorAll('button,input:not(.hp),select,textarea,a[href]')].filter(x=>!x.disabled&&x.offsetParent!==null);if(!f.length)return;const a=f[0],z=f[f.length-1];
     if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
 const LEAD_HTML=document.getElementById('leadBody').innerHTML;
