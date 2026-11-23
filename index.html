@@ -34,7 +34,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
-header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:16px;padding:8px 18px;min-height:72px}
+header{background:#fff;color:var(--navy);border-bottom:1px solid var(--line);box-shadow:0 1px 4px rgba(12,23,61,.08);display:flex;align-items:center;gap:16px;padding:8px 18px;min-height:72px}
 .logo{flex:none;display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:8px;padding:4px 10px 3px;text-decoration:none;color:var(--navy);line-height:1}
 .logo img{display:block;height:52px;width:auto}
 .logo small{font:600 9px Inter,sans-serif;margin-top:3px;white-space:nowrap}
@@ -42,12 +42,12 @@ header .btn{white-space:nowrap}
 .ehl-top{flex:none;display:flex;align-items:center;background:#fff;border-radius:8px;padding:4px 6px;margin-left:-8px}
 .ehl-top img{display:block;height:56px;width:auto}
 .brand{font-family:Montserrat,sans-serif;font-size:21px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
-.brand span{color:var(--gold2)}
-.tag a{color:#17c7c4;text-decoration:underline}.foot a{color:#0b6e6c}.tag{font-size:13px;opacity:.8;border-left:1px solid rgba(255,255,255,.25);padding-left:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand span{color:#0b7f7c}
+.tag a{color:#0b7f7c;text-decoration:underline}.foot a{color:#0b6e6c}.tag{font-size:13px;border-left:1px solid var(--line);padding-left:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header .cta{margin-left:auto;display:flex;gap:10px;align-items:center}
 .btn{border:0;border-radius:8px;padding:10px 16px;font:600 14px Inter,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn-gold{background:var(--gold);color:var(--navy)}.btn-gold:hover{background:#12aeab}
-.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
+.btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--navy)}
 .btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy2)}
 .btn-line{background:#fff;color:var(--navy);border:1px solid var(--line)}
 .promo{background:var(--gold);color:var(--navy);height:40px;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;font-weight:600;font-size:14.5px;cursor:pointer;white-space:nowrap;overflow:hidden}
