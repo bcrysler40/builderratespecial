@@ -39,6 +39,8 @@ header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:16p
 .logo img{display:block;height:52px;width:auto}
 .logo small{font:600 9px Inter,sans-serif;margin-top:3px;white-space:nowrap}
 header .btn{white-space:nowrap}
+.ehl-top{flex:none;display:flex;align-items:center;background:#fff;border-radius:8px;padding:4px 6px;margin-left:-8px}
+.ehl-top img{display:block;height:56px;width:auto}
 .brand{font-family:Montserrat,sans-serif;font-size:21px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
 .brand span{color:var(--gold2)}
 .tag a{color:#17c7c4;text-decoration:underline}.foot a{color:#0b6e6c}.tag{font-size:13px;opacity:.8;border-left:1px solid rgba(255,255,255,.25);padding-left:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -135,9 +137,10 @@ form textarea{min-height:70px;resize:vertical}
   aside.collapsed #sidePanel{display:none}
   #sidePanel{overflow:auto}#sidePanel .list{flex:none;overflow:visible}#sidePanel .foot,#sidePanel .filters,#sidePanel .count{flex:none}
   .toggle{display:block;width:100%;padding:9px;border:0;background:#eef2f6;font:600 13px Inter,sans-serif;color:var(--navy);cursor:pointer}
-  .brand{font-size:15px;white-space:normal;line-height:1.15}
-  header{gap:10px;padding:8px 12px}
-  .logo{padding:4px 7px 3px}.logo img{height:40px}.logo small{font-size:8px}
+  .brand{font-size:14px;white-space:normal;line-height:1.15}
+  header{gap:8px;padding:8px 10px}
+  .logo{padding:3px 5px 2px}.logo img{height:32px}.logo small{font-size:7px}
+  .ehl-top{padding:3px 3px;margin-left:-5px}.ehl-top img{height:38px}
   header .btn{white-space:normal;padding:8px 10px;font-size:13px;flex:none;max-width:96px;text-align:center}
 }
 .install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:3000;background:#fff;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:14px 14px 14px 12px;display:none;align-items:center;gap:12px;max-width:460px;margin:0 auto}
@@ -173,6 +176,7 @@ button.card{width:100%;text-align:left;background:#fff;border:0;border-bottom:1p
 </div>
 <header>
   <a class="logo" href="https://southernhl.com/" target="_blank" rel="noopener"><img src="/brand/shl-logo.png" alt="Southern Home Loans, a division of Luminate Bank" width="123" height="52"><small>Luminate Bank NMLS# 1281698</small><span class="sr-only"> (opens in a new tab)</span></a>
+  <span class="ehl-top"><img src="/brand/equal-housing-lender.svg" alt="Equal Housing Lender" width="51" height="56"></span>
   <h1 class="brand">Locate Homes <span>with Builder Rate Incentives</span></h1>
   <div class="tag">Marion &amp; Citrus County Homes for Sale · Financing by <a href="https://southernhl.com/" target="_blank" rel="noopener">Southern Home Loans</a></div>
   <div class="cta">
